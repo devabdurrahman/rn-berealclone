@@ -1,11 +1,13 @@
 import { Text, View, StyleSheet, TextInput, SafeAreaView, TouchableOpacity} from "react-native";
+import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
+	const router = useRouter();
 	return (
 		<SafeAreaView edges={["top", "bottom", "left", "right"]} style={styles.container}>
 			<View style={styles.content}>
 				<Text style={styles.title}>Welcome Back</Text>
-				<Text style={styles.subTitle}>Sign in to Continue (Tutorial Done till 1:32:28)</Text>			
+				<Text style={styles.subTitle}>Sign in to Continue (Tutorial Done till TBA)</Text>			
 				<View style={styles.form}>
 				 <TextInput 
 				 placeholder="Email..." 
@@ -26,7 +28,7 @@ export default function LoginScreen() {
 				 <TouchableOpacity style= {styles.button}>
 				 	<Text style= {styles.buttonText}>Sign in</Text>
 				 </TouchableOpacity>
-				 <TouchableOpacity style= {styles.linkButton}>
+				 <TouchableOpacity style= {styles.linkButton} onPress={() => router.push("/(auth)/signup")}>
 				 	<Text style= {styles.linkButtonText} >Don't have an account? <Text style= {styles.linkButtonTextBold}>Sign Up</Text></Text>
 				 </TouchableOpacity>
 				</View>
