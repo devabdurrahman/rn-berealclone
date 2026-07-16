@@ -1,5 +1,5 @@
-import { supabase } from "@lib/supabase/client";
-import { createContext, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import { createContext, useState, useContext, ReactNode } from "react";
 
 export interface User{
 	id: string,
@@ -33,13 +33,17 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 		}
 	}
 
-	return (<AuthContext.provider value={{user, signUp}}>{children}<AuthContext.provider>);
+	return (
+	  <AuthContext.Provider value={{ user, signUp }}>
+	    {children}
+	  </AuthContext.Provider>
+	);
 };
 
-export const useAuth = ( ) => {
-	const context = useContext(AuthContext);
-	if(context === undefined{
-		throw new Error("must be used inside the provider");
-	}
-	return context;
-}
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("must be inside the provider");
+  }
+  return context;
+};

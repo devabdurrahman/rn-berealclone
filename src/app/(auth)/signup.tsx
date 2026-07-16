@@ -1,13 +1,32 @@
 import {useState} from "react";
-import { Text, View, StyleSheet, TextInput, SafeAreaView, TouchableOpacity, Alert} from "react-native";
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext"
 
 export default function SignUpScreen() {
-	const [email, setEmail] = useState();
-	const [password, setPassword] = useState();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
+	const { signUp } = useAuth();
 	const handleSignUp = async () => {
-		if(!email || !password){
-			Alert.alert("Error", "please fill in all fields")
+		if (!email || !password) {
+		    Alert.alert("Error", "Please fill in all fields");
+		    return;
+		}
+		if (password.length < 3) {
+		    Alert.alert("Error", "Password must be at least 3 characters");
+		    return;
+		}
+
+		setIsLoading(true);
+		try{
+			await signUp(email, password);
+		}catch(error){
+			Alert.alert("Error", "Failed to sign up, Please try again");
+		}finally{
+			setIsLoading(false);
 		}
 	}
 	const router = useRouter();
@@ -38,7 +57,11 @@ export default function SignUpScreen() {
 				 style= {styles.input}
 				 />
 				 <TouchableOpacity style= {styles.button} onPress={handleSignUp}>
-				 	<Text style= {styles.buttonText}>Sign up</Text>
+				 	{isLoading ? 
+				 	(<ActivityIndicator size={"large"} color="#fff"/>) 
+				 	: (
+			 		<Text style= {styles.buttonText}>Sign up</Text>
+				 	)}
 				 </TouchableOpacity>
 				 <TouchableOpacity style= {styles.linkButton} onPress={() => router.push("/(auth)/login")}>
 				 	<Text style= {styles.linkButtonText} >Already have an account? <Text style= {styles.linkButtonTextBold}>Sign In</Text></Text>
