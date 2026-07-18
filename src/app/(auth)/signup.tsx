@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -8,8 +8,11 @@ export default function SignUpScreen() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-
+	const router = useRouter();
 	const { signUp } = useAuth();
+	useEffect(() => {
+		router.push("/(auth)/onboarding");
+	}, [] );
 	const handleSignUp = async () => {
 		if (!email || !password) {
 		    Alert.alert("Error", "Please fill in all fields");
@@ -29,7 +32,6 @@ export default function SignUpScreen() {
 			setIsLoading(false);
 		}
 	}
-	const router = useRouter();
 	return (
 		<SafeAreaView edges={["top", "bottom", "left", "right"]} style={styles.container}>
 			<View style={styles.content}>
