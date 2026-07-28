@@ -1,5 +1,5 @@
 import {useState} from "react";
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator} from "react-native";
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -9,6 +9,28 @@ export default function SignUpScreen() {
 	const [name, setName] = useState("");
   	const [username, setUsername] = useState("");
   	const [isLoading, setIsLoading] = useState(false);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+    const pickImage = async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if( status !== "granted"){
+        Alert.alert(
+            "Permission Needed",
+            "We need camera roll permissions to select a profile image."
+          );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing:  true, 
+        aspect: [1,1],
+        quality: 0.8,
+      });
+
+      if(!result.canceled && result.assets[0]){
+        setProfileImage(result.assets[0].uri);
+      }
+    }
   	const handleComplete = async () => {
 
   	}
@@ -21,12 +43,16 @@ export default function SignUpScreen() {
 					<Text style={styles.subTitle}>Add your information to get started</Text>
 				</View>
 				<View style={styles.form}>
-					<TouchableOpacity style={styles.imageContainer}>
+					<TouchableOpacity style={styles.imageContainer} onPress={pickImage}>
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.profileImage}/>
+            ) : (
 						<View style={styles.placeholderImage}>
 							<Text style={styles.placeholderText}>
 								+
 							</Text>
 						</View>
+          )}
 						<View style={styles.editBadge}>
 							<Text style={styles.editText}>
 								Edit
